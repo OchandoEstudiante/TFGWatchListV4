@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/yourWatchlistFragment">
+
+    <fragment
+        android:id="@+id/watchlistFragment"
+        android:name="com.example.tfgwatchlist.watchlist.ui.views.watchlistSearch.Watchlist_Fragment"
+        android:label="ListaSearch"
+        tools:layout="@layout/fragment_watchlist_">
+        <action
+            android:id="@+id/action_watchlistFragment_to_watchlistDetailedFragment"
+            app:destination="@+id/watchlistDetailsFragment"/>
+    </fragment>
+
+
+
+    <fragment
+        android:id="@+id/watchlistDetailsFragment"
+        android:name="com.example.tfgwatchlist.watchlist.ui.views.watchlistDetailed.WatchlistDetailedFragment"
+        android:label="ListaSearchDetailed"
+        tools:layout="@layout/fragment_watchlist_detailed">
+        <action
+            android:id="@+id/action_watchlistFragmentDetailed_to_watchlistEpisodesFragment"
+            app:destination="@+id/watchlistEpisodesFragment"/>
+        <argument
+            android:name="mediaId"
+            app:argType="integer"/>
+
+        <argument
+            android:name="typeMedia"
+            app:argType="string"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/watchlistEpisodesFragment"
+        android:name="com.example.tfgwatchlist.watchlist.ui.views.watchlistEpisodes.WatchlistEpisodesFragment"
+        android:label="ListaSearchEpisodes"
+        tools:layout="@layout/fragment_watchlist_episodes">
+        <argument
+            android:name="serieId"
+            app:argType="integer"/>
+
+        <action
+            android:id="@+id/actionMISCOJONES"
+            app:destination="@+id/watchlistDetailsFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/yourWatchlistFragment"
+        android:name="com.example.tfgwatchlist.yourwatchlist.ui.views.YourWatchlist.YourWatchlistFragment"
+        android:label="TuLista"
+        tools:layout="@layout/fragment_your_watchlist">
+
+        <action
+            android:id="@+id/action_yourWatchlistFragment_to_yourWatchlistDetailedFragment"
+            app:destination="@+id/yourWatchlistDetailedFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/yourWatchlistDetailedFragment"
+        android:name="com.example.tfgwatchlist.yourwatchlist.ui.views.YourWatchlistDetailed.YourWatchlistDetailedFragment"
+        android:label="TuListaADetalle"
+        tools:layout="@layout/fragment_your_watchlist_detailed">
+
+        <argument
+            android:name="media"
+            app:argType="com.example.tfgwatchlist.yourwatchlist.data.network.model.ItemMediaMongoItem"/>
+
+        <action
+            android:id="@+id/action_yourWatchlistDetailedFragment_to_yourWatchlistEpisodesFragment"
+            app:destination="@+id/yourWatchlistEpisodesFragment"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/yourWatchlistEpisodesFragment"
+        android:name="com.example.tfgwatchlist.yourwatchlist.ui.views.YourWatchlistEpisodes.YourWatchlistEpisodesFragment"
+        android:label="TuListEpisodios"
+        tools:layout="@layout/fragment_your_watchlist_episodes">
+
+        <argument
+            android:name="serieId"
+            app:argType="integer"/>
+
+        <!--<argument
+            android:name="listaNombreTemporadas"
+            app:argType="string[]"/> -->
+
+    </fragment>
+
+</navigation>

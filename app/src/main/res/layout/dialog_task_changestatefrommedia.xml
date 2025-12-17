@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/dialogConfirmationBackgroundColor"
+    android:orientation="vertical"
+    android:padding="12dp"
+    android:gravity="center_horizontal">
+
+    <TextView
+        android:id="@+id/tvHeaderChangeStateOfMedia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dialogTextHeaderChangeStatus"
+        android:textSize="19dp"
+        android:textColor="@color/dialogTextColor"
+        android:layout_margin="8dp"/>
+
+    <RadioGroup
+        android:id="@+id/rgStatesOfMedia"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/rbWatching"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dialogRadioButtonWatching"
+            android:checked="true"
+            android:textColor="@color/dialogTextColor"/>
+
+        <RadioButton
+            android:id="@+id/rbWatched"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dialogRadioButtonWatched"
+            android:textColor="@color/dialogTextColor"/>
+
+        <RadioButton
+            android:id="@+id/rbHalfWatched"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dialogRadioButtonHalfWatched"
+            android:textColor="@color/dialogTextColor"/>
+
+        <RadioButton
+            android:id="@+id/rbWatchlist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dialogRadioButtonToBeSeen"
+            android:textColor="@color/dialogTextColor"/>
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/btnConfirmChanges"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/dialogButtonBackgroundColor"
+        android:textColor="@color/white"
+        android:text="@string/dialogButtonConfirmation"/>
+</LinearLayout>

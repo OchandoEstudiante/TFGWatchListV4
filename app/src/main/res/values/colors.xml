@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- YourWatchlist -->
+    <!-- YourWatchlistDetails -->
+    <color name="btnDeleteFromWatchlistBackgroundColor">#E24A4A</color>
+    <color name="bottomBarYourWatchlistBackgroundColor">#E7E7E7</color>
+    <!-- SearchWatchlist -->
+    <color name="searchBarWatchlist"> #B1A9A9 </color>
+
+    <!-- SearchWatchlistDetails-->
+    <color name="watchlistDetailsBackgroundColor">#DBDBDB</color>
+    <color name="spinnerBackgroundColorWatchlistDetails">#B1A9A9</color>
+    <color name="mediaPreviewWatchlistDetails">#373636</color>
+    <color name="topBarBackgroundWatchlistDetails">#E7E7E7</color>
+    <color name="infoTextWatchlistDetails">#373636</color>
+    <color name="btnAddBackgroundColorWatchlistDetails">#595959</color>
+
+    <!-- Cardviews -->
+    <color name="cardviewWatchlistBackgroundColor">#333131</color>
+    <color name="cardviewWatchlistTextColor">#333131</color>
+
+    <color name="cardviewEpisodeBackgroundColor">#F0F0F0</color>
+    <color name="cardviewEpisodeTitle">#373636</color>
+    <color name="cardviewEpisodePreview">#373636</color>
+
+    <!--Dialogs-->
+    <color name="dialogConfirmationBackgroundColor">#DBDBDB</color>
+    <color name="dialogTextColor">#373636</color>
+    <color name="dialogButtonBackgroundColor">#7E7E7E</color>
+</resources>

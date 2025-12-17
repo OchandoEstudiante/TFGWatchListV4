@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="250dp"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/dialogConfirmationBackgroundColor"
+    android:orientation="vertical"
+    android:padding="12dp">
+
+    <TextView
+        android:id="@+id/tvHeaderAddToYourWatchlist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dialogConfirmationAddHeader"
+        android:textSize="19dp"
+        android:textColor="@color/dialogTextColor"
+        android:layout_margin="8dp"/>
+
+    <TextView
+        android:id="@+id/tvBodyAddToYourWatchlist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/dialogTextColor"
+        android:textSize="16dp"
+        android:layout_marginHorizontal="8dp"
+        tools:text="@string/dialogConfirmationAddBody"/>
+
+    <Button
+        android:id="@+id/btnDialogAddToYourWatchlistYes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="SI"
+        android:backgroundTint="@color/dialogButtonBackgroundColor"
+        android:textAllCaps="true"
+        android:layout_margin="8dp"/>
+    <Button
+        android:id="@+id/btnDialogAddToYourWatchlistNo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/dialogButtonBackgroundColor"
+        android:text="NO"
+        android:textAllCaps="true"
+        android:layout_margin="8dp"/>
+</LinearLayout>

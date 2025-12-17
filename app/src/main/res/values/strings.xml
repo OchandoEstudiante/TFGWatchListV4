@@ -1,0 +1,45 @@
+<resources>
+    <string name="app_name">TFGWatchList</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <!--Textos generales-->
+    <string name="confirmText">Confirmar</string>
+    <string name="acceptText">Aceptar</string>
+    <string name="cancelText">Cancelar</string>
+    <string name="noText">No</string>
+    <string name="yesText">Si</string>
+    <!-- Textos para la parte online-->
+    <string name="noSeriesFound">No se encontraron series en la API con el nombre que has proporcionado</string>
+    <string name="noMoviesFound">No se encontraron peliculas en la API con el nombre que has proporcionado</string>
+    <string name="noItemsFound">Hello blank fragment</string>
+    <string name="errorSearch">Hello blank fragment</string>
+    <string name="inCaseOfEmptyApi">Hello blank fragment</string>
+
+    <string name="btnAddYourWatchlist">Agregar a tu watchlist</string>
+    <!-- Dialogs -->
+    <string name="dialogConfirmationAddHeader">Añadir a tu watchlist: </string>
+    <string name="dialogConfirmationAddBody">Desea añadir esta serie a tu watchlist?</string>
+    <string name="dialogTextHeaderChangeStatus">Cambiar estado</string>
+    <string name="dialogTextHeaderConfirmedDeletion">Eliminación completa:</string>
+    <string name="dialogTextBodyConfirmedDeletionPart1">Se eliminó </string>
+    <string name="dialogTextBodyConfirmedDeletionPart2"> de la watchlist con éxito, se volverá a la pantalla anterior</string>
+    <string name="dialogRadioButtonWatching">Viendo</string>
+    <string name="dialogRadioButtonWatched">Vista</string>
+    <string name="dialogRadioButtonHalfWatched">A medias</string>
+    <string name="dialogRadioButtonToBeSeen">Por ver</string>
+    <string name="dialogButtonConfirmation">Confirmar</string>
+    <string name="dialogButtonCancel">Cancelar</string>
+
+    <!-- Textos para la parte de tu watchlist-->
+    <string name="statusMediaTextAll">Todas</string>
+    <string name="statusMediaTextWatching">Viendo</string>
+    <string name="statusMediaTextWatched">Vista</string>
+    <string name="statusMediaTextHalfWatched">A medias</string>
+    <string name="statusMediaTextToBeSeen">Por ver</string>
+    <string name="buttonTextWatchSeasonsSerie">Ver temporadas</string>
+
+    <string name="buttonTextChangeStatusMedia">Cambiar estado</string>
+    <string name="buttonTextDeleteMedia">Eliminar de watchlist</string>
+
+    <string name="spinnerStateGeneralInfo">Ficha general</string>
+    <string name="spinnerStateCast">Reparto</string>
+</resources>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="350dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardBackgroundColor="@color/cardviewEpisodeBackgroundColor"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="8dp"
+    android:layout_marginVertical="6dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/ivItemEpisodeImage"
+            android:layout_width="match_parent"
+            android:layout_height="190dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:scaleType="centerCrop"/>
+
+        <!--<ImageView
+            android:id="@+id/ivItemEpisodeImage"
+            android:layout_width="135dp"
+            android:layout_height="100dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginVertical="10dp"
+            android:layout_marginHorizontal="12dp">
+        </ImageView> -->
+
+        <TextView
+            android:id="@+id/tvItemEpisodeName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Ejemplo"
+            android:textColor="@color/cardviewEpisodeTitle"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:layout_gravity="center_horizontal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ivItemEpisodeImage"
+            android:layout_margin="7dp"/>
+
+        <TextView
+            android:id="@+id/tvItemEpisodeAirDateAndLength"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:textStyle="italic"
+            app:layout_constraintTop_toBottomOf="@id/tvItemEpisodeName"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:text="Ejemplo"
+            android:layout_margin="7dp"
+            />
+
+        <TextView
+            android:id="@+id/tvItemEpisodePreview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Ejemplo"
+            android:textColor="@color/cardviewEpisodePreview"
+            android:textSize="15dp"
+            android:textStyle="italic"
+            android:layout_margin="7dp"
+            app:layout_constraintTop_toBottomOf="@id/tvItemEpisodeAirDateAndLength"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
