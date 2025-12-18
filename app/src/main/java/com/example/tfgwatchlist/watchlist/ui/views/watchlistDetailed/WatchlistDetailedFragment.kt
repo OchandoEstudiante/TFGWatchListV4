@@ -36,12 +36,9 @@ import java.time.format.DateTimeFormatter
 class WatchlistDetailedFragment : Fragment() {
 
     /*
-    -Sacar generos por pantalla(Parcialmente solucionado)
     -Tratar las fechas aquí también()
     -Hacer el adapter de los actores y que funcione(Solucionado(Estaría bien mejorar el formato))
-    -Hacer que funcione lo de buscar trailers(WIP)
     -Mejorar el formato visual de los episodios(WIP)
-    -Hacer que varias de las lineas sean Strings para poder darles traduccion(Hoy mismo)
      */
     private lateinit var binding: FragmentWatchlistDetailedBinding
 

@@ -61,7 +61,6 @@ class Watchlist_Fragment : Fragment() {
     ): View? {
         binding = FragmentWatchlistBinding.inflate(inflater, container, false)
         return binding.root
-        // Inflate the layout for this fragment
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

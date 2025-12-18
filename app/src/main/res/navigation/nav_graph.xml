@@ -42,10 +42,6 @@
         <argument
             android:name="serieId"
             app:argType="integer"/>
-
-        <action
-            android:id="@+id/actionMISCOJONES"
-            app:destination="@+id/watchlistDetailsFragment"/>
     </fragment>
 
     <fragment

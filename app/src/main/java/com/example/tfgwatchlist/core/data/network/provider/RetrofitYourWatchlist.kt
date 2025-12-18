@@ -34,17 +34,6 @@ object RetrofitYourWatchlist {
             .build()
 
     }
-    /*fun provideokHttpClient() = OkHttpClient.Builder()
-        .addInterceptor { chain ->
-            val request = chain.request()
-                .newBuilder()
-                .addHeader("Content-type", "application/json")
-                .build()
-            chain.proceed(request)
-        }
-        .addInterceptor(logging)
-        .build()
-    */
     fun provideRetrofit(
         client: OkHttpClient,
         converterFactory: Converter.Factory
