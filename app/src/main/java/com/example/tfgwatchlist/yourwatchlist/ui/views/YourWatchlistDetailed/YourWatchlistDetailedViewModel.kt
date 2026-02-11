@@ -14,6 +14,9 @@ import com.example.tfgwatchlist.yourwatchlist.ui.views.YourWatchlist.YourWatchli
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 class YourWatchlistDetailedViewModel(private val repository: YourWatchlistRepository): ViewModel() {
@@ -23,33 +26,50 @@ class YourWatchlistDetailedViewModel(private val repository: YourWatchlistReposi
 
     val uiState = _uiState.asStateFlow()
 
-    fun fetchCast(){
-        viewModelScope.launch(Dispatchers.IO) {
-
-        }
-    }
-
-    fun changeStateMedia(mediaItem: ItemMediaMongoItem, estado: String){
+    fun fetchCast(mediaItem: ItemMediaMongoItem){
         viewModelScope.launch(Dispatchers.IO) {
             when(mediaItem){
                 is MovieMongoItem -> {
-                    repository.changeStatePelicula(mediaItem.id, estado)
+                    repository.fetchCastMoviesFlow(mediaItem.id)
+                        .onStart { _uiState.value = YourWatchlistDetailedUiState.Loading }
+                        .catch {
+                            _uiState.value = YourWatchlistDetailedUiState.Error(it.message.toString())
+                        }
+                        .collect{ _uiState.value = YourWatchlistDetailedUiState.Success(it) }
                 }
                 is SerieMongoItem -> {
-                    repository.changeStateSerie(mediaItem.id, estado)
+                    repository.fetchCastSeriesFlow(mediaItem.id)
+                        .onStart { _uiState.value = YourWatchlistDetailedUiState.Loading }
+                        .catch {
+                            _uiState.value = YourWatchlistDetailedUiState.Error(it.message.toString())
+                        }
+                        .collect { _uiState.value = YourWatchlistDetailedUiState.Success(it) }
                 }
             }
         }
     }
 
-    fun deleteMedia(mediaItem: ItemMediaMongoItem){
+    fun changeStateMedia(userName: String, mediaItem: ItemMediaMongoItem, estado: String){
         viewModelScope.launch(Dispatchers.IO) {
             when(mediaItem){
                 is MovieMongoItem -> {
-                    repository.deletePelicula(mediaItem.id)
+                    repository.changeStatePelicula(userName, mediaItem.id, estado)
                 }
                 is SerieMongoItem -> {
-                    repository.deleteSerie(mediaItem.id)
+                    repository.changeStateSerie(userName, mediaItem.id, estado)
+                }
+            }
+        }
+    }
+
+    fun deleteMedia(userName: String, mediaItem: ItemMediaMongoItem){
+        viewModelScope.launch(Dispatchers.IO) {
+            when(mediaItem){
+                is MovieMongoItem -> {
+                    repository.deletePelicula(userName, mediaItem.id)
+                }
+                is SerieMongoItem -> {
+                    repository.deleteSerie(userName, mediaItem.id)
                 }
             }
         }

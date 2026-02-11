@@ -1,5 +1,8 @@
 package com.example.tfgwatchlist.core.data.network.provider
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import com.example.tfgwatchlist.BuildConfig
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
@@ -9,10 +12,6 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 
 object RetrofitHelper {
     private const val API_BASE_URL = "https://api.themoviedb.org/3/"
-
-    private const val API_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyODZjNmRkNzRmNDk5YTg3M2RjYTIxNzk0ZmMzOTUwNiI" +
-            "sIm5iZiI6MTczNzk3NTk5My4zMDU5OTk4LCJzdWIiOiI2Nzk3NjhiOTc2MGY1MWUxN2QyYjMzYWIiLCJzY29wZXMi" +
-            "OlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.svV0G3rWKPjKKW2gWRyHI0Ozbv8CdiDS6NbSTQeLYNc"
 
     fun provideMoshi() = Moshi.Builder()
         .addLast(KotlinJsonAdapterFactory())
@@ -41,7 +40,7 @@ object RetrofitHelper {
 
     fun provideRetrofit(): Retrofit =
         provideRetrofit(
-            provideOkHttpClient(API_TOKEN),
+            provideOkHttpClient(BuildConfig.API_TOKEN),
             provideConverterFactory()
         )
 }

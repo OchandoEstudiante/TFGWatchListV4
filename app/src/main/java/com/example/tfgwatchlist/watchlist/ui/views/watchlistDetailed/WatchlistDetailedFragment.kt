@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.core.view.isVisible
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -20,18 +21,22 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.tfgwatchlist.R
+import com.example.tfgwatchlist.core.datastore.AuthDataStore
 import com.example.tfgwatchlist.core.utils.generarURL
 import com.example.tfgwatchlist.core.utils.generarURLYoutube
 import com.example.tfgwatchlist.databinding.DialogTaskAddtoyourwatchlistBinding
 import com.example.tfgwatchlist.databinding.FragmentWatchlistDetailedBinding
+import com.example.tfgwatchlist.shared.UserViewModel
 import com.example.tfgwatchlist.watchlist.data.network.model.MediaItemDetails
 import com.example.tfgwatchlist.watchlist.data.network.model.PeliculaDetailsResponse
 import com.example.tfgwatchlist.watchlist.data.network.model.SerieDetailsResponse
+import com.example.tfgwatchlist.yourwatchlist.domain.YourWatchlistRepository
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import kotlin.getValue
 
 class WatchlistDetailedFragment : Fragment() {
 
@@ -43,7 +48,8 @@ class WatchlistDetailedFragment : Fragment() {
     private lateinit var binding: FragmentWatchlistDetailedBinding
 
     private lateinit var adapterReparto: WatchlistDetailsAdapter
-
+    private lateinit var nombreUsuario: String
+    private val userViewModel: UserViewModel by activityViewModels()
     private val viewModel by viewModels<WatchlistDetailsViewModel>{
         WatchlistDetailsViewModel.Factory
     }
@@ -58,14 +64,32 @@ class WatchlistDetailedFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        val authDataStore = AuthDataStore(requireContext())
+        lifecycleScope.launch {
+            authDataStore.userToken.collect { storedUserName ->
+                storedUserName?.let {
+                    nombreUsuario = storedUserName
+                    Log.i("ChandoNameUserDetailedWathclist", nombreUsuario)
+                    val idMedia = arguments?.getInt("mediaId")?: -1
+                    val typeMedia = arguments?.getString("typeMedia")
+                    adapterReparto = WatchlistDetailsAdapter()
+                    binding.rvWatchlistDetailsCast.layoutManager = LinearLayoutManager(requireContext())
+                    binding.rvWatchlistDetailsCast.adapter = adapterReparto
+                    initUI(idMedia, typeMedia)
+                    observeUI()
+                }
+            }
+        }
+        /*
+        nombreUsuario = userViewModel.returnUserName().toString()
+        Log.i("ChandoNameUser", nombreUsuario)
         val idMedia = arguments?.getInt("mediaId")?: -1
         val typeMedia = arguments?.getString("typeMedia")
         adapterReparto = WatchlistDetailsAdapter()
         binding.rvWatchlistDetailsCast.layoutManager = LinearLayoutManager(requireContext())
         binding.rvWatchlistDetailsCast.adapter = adapterReparto
         initUI(idMedia, typeMedia)
-        observeUI()
+        observeUI() */
     }
 
     private fun observeUI(){
@@ -87,6 +111,23 @@ class WatchlistDetailedFragment : Fragment() {
                         is WatchlistDetailsUiState.SuccessMedia -> {
                             Log.i("Serie exito", "Sacando por pantalla la serie ${uiState.mediaDetails.titulo}")
                             rellenarData(uiState.mediaDetails)
+                        }
+
+                        is WatchlistDetailsUiState.SuccessPostPelicula -> {
+                            if(uiState.postResponse.ok){
+                                Log.i("Película exito", "Agregada con exito la película a la lista de ${nombreUsuario}")
+                                Snackbar.make(binding.root, getString(R.string.movieAddedTextPart1)+ " ${uiState.postResponse.movieName}" +getString(R.string.movieAddedTextPart2)+ "${nombreUsuario}", Snackbar.LENGTH_SHORT).show()
+                            } else {
+                                Snackbar.make(binding.root, getString(R.string.movieAlreadyInWatchlist), Snackbar.LENGTH_SHORT).show()
+                            }
+                        }
+                        is WatchlistDetailsUiState.SuccessPostSerie -> {
+                            if(uiState.postResponse.ok){
+                                Log.i("Serie exito", "Agregada con exito la serie a la lista de ${nombreUsuario}")
+                                Snackbar.make(binding.root, getString(R.string.serieAddedTextPart1)+ " ${uiState.postResponse.serieName}" +getString(R.string.serieAddedTextPart2)+ "${nombreUsuario}", Snackbar.LENGTH_SHORT).show()
+                            } else {
+                                Snackbar.make(binding.root, getString(R.string.serieAlreadyInWatchlist), Snackbar.LENGTH_SHORT).show()
+                            }
                         }
                     }
                 }
@@ -158,7 +199,7 @@ class WatchlistDetailedFragment : Fragment() {
     private fun rellenarPelicula(pelicula: PeliculaDetailsResponse){
         setSpinnerMedia(pelicula)
         binding.btnMostrarTemporadas.isVisible = false
-        binding.tvGeneralInfoWatchlistDetails.text = pelicula.fechaEstreno + " - " + pelicula.duracion + "Minutos"
+        binding.tvGeneralInfoWatchlistDetails.text = tratamientoDeFechas(pelicula.fechaEstreno) + " - " + treatDuration(pelicula.duracion)
     }
 
     private fun rellenarSerie(serie: SerieDetailsResponse){
@@ -169,7 +210,7 @@ class WatchlistDetailedFragment : Fragment() {
         binding.btnMostrarTemporadas.setOnClickListener {
             findNavController().navigate(action)
         }
-        binding.tvGeneralInfoWatchlistDetails.text = serie.fechaEstreno + " - " + serie.cantidadTemporadas + " temporadas"
+        binding.tvGeneralInfoWatchlistDetails.text = tratamientoDeFechas(serie.fechaEstreno) + " - " + treatSeasons(serie.cantidadTemporadas)
     }
 
 
@@ -216,14 +257,15 @@ class WatchlistDetailedFragment : Fragment() {
 
         when(media){
             is PeliculaDetailsResponse -> {
-                binding.tvBodyAddToYourWatchlist.text = "Desea añadir la película '${media.titulo}' a su watchlist?"
+                binding.tvBodyAddToYourWatchlist.text = getString(R.string.dialogConfirmationAddBodyPart1Movies) + media.titulo + getString(R.string.dialogConfirmationAddBodyPart2Both)
             }
             is SerieDetailsResponse -> {
-                binding.tvBodyAddToYourWatchlist.text = "Desea añadir la serie '${media.titulo}' a su watchlist?"
+                binding.tvBodyAddToYourWatchlist.text = getString(R.string.dialogConfirmationAddBodyPart1Series) + media.titulo + getString(R.string.dialogConfirmationAddBodyPart2Both)
             }
         }
         btnConfirmation.setOnClickListener {
             Log.i("AddYourWatchlist", "El usuario quiere añadir a watchlist")
+            viewModel.addMediaToYourWatchlist(media, nombreUsuario)
             dialog.dismiss()
         }
 
@@ -235,7 +277,33 @@ class WatchlistDetailedFragment : Fragment() {
         dialog.show()
     }
 
-    private fun treatDates(fechaString: String): LocalDate{
-        return LocalDate.parse(fechaString, DateTimeFormatter.ISO_LOCAL_DATE)
+    private fun tratamientoDeFechas(fechaString: String?): String{
+        val fecha = LocalDate.parse(fechaString, DateTimeFormatter.ISO_LOCAL_DATE)
+        return "${fecha.dayOfMonth} ${fecha.month} ${fecha.year}"
+    }
+
+    //Funcion para devolver texto según cantidad de temporadas
+    private fun treatSeasons(numeroTemporadas: Int): String{
+        if(numeroTemporadas > 1){
+            return "${numeroTemporadas}" + getString(R.string.seasonsPlural)
+        } else {
+            return "${numeroTemporadas}" + getString(R.string.seasonsSingular)
+        }
+    }
+
+    private fun treatDuration(minutos: Int): String{
+        if(minutos < 59){
+            return "${minutos} minutos"
+        } else {
+            val horas = minutos / 60
+            val minRes = minutos % 60
+            if(horas > 1){
+                return horas.toString() + getString(R.string.hoursPlural) +
+                        minRes+ getString(R.string.minutesPlural)
+            } else {
+                return horas.toString() + getString(R.string.hoursSingular) +
+                        minRes + getString(R.string.minutesPlural)
+            }
+        }
     }
 }

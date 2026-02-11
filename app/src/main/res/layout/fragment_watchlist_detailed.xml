@@ -153,7 +153,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="40dp"
             android:layout_marginVertical="10dp"
-            android:text="Ver temporadas"
+            android:text="@string/buttonTextWatchSeasonsSerie"
             android:textAllCaps="true"
             android:visibility="gone"
             app:layout_constraintLeft_toLeftOf="parent"

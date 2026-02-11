@@ -31,9 +31,14 @@ class YourWatchlistViewModel(private val repository: YourWatchlistRepository): V
             }
         }
     }
-    fun fetchSeries(){
+
+    /*init {
+        fetchSeries(userName: String)
+    }
+    */
+    fun fetchSeries(userName: String){
         viewModelScope.launch(Dispatchers.IO) {
-            repository.fetchSeriesFlow()
+            repository.fetchSeriesFlow(userName)
                 .onStart{_uiState.value = YourWatchlistUiState.Loading }
                 .catch{
                     Log.i("Chando", "Error en la linea 27 del view model de tu watchlist")
@@ -46,30 +51,43 @@ class YourWatchlistViewModel(private val repository: YourWatchlistRepository): V
         }
     }
 
-    fun fetchPeliculas(){
+    fun fetchPeliculas(userName: String){
         viewModelScope.launch(Dispatchers.IO) {
-            repository.fetchPeliculasFlow()
+            repository.fetchPeliculasFlow(userName)
                 .onStart { _uiState.value = YourWatchlistUiState.Loading }
                 .catch {
                     Log.i("Peliculas Mongo error", "Error al obtener las películas")
                     _uiState.value = YourWatchlistUiState.Error("Se ha producido un error ${it.message}")
                 }
                 .collect {
-                    Log.i("Chanod", "")
                     _uiState.value = YourWatchlistUiState.Success(it)
                 }
         }
     }
 
-    fun fetchMoviesFiltered(filtro: String, query: String){
+    fun fetchMoviesFiltered(userName: String, filtro: String, query: String){
         viewModelScope.launch(Dispatchers.IO) {
-
+            repository.fetchPeliculasFiltered(userName, filtro, query)
+                .onStart { _uiState.value = YourWatchlistUiState.Loading }
+                .catch {
+                    _uiState.value = YourWatchlistUiState.Error("Se ha producido un error ")
+                }
+                .collect {
+                    _uiState.value = YourWatchlistUiState.SuccessFiltered(it)
+                }
         }
     }
 
-    fun fetchSeriesFiltered(filtro: String, query: String){
+    fun fetchSeriesFiltered(userName: String, filtro: String, query: String){
         viewModelScope.launch(Dispatchers.IO) {
-
+            repository.fetchSeriesFiltered(userName, filtro, query)
+                .onStart { _uiState.value = YourWatchlistUiState.Loading }
+                .catch {
+                    _uiState.value = YourWatchlistUiState.Error("Se ha producido un error")
+                }
+                .collect {
+                    _uiState.value = YourWatchlistUiState.SuccessFiltered(it)
+                }
         }
     }
 

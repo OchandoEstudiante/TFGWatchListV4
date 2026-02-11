@@ -29,7 +29,7 @@
         android:id="@+id/btnDialogDeleteFromYourWatchlistConfirm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="SI"
+        android:text="@string/yesText"
         android:backgroundTint="@color/dialogButtonBackgroundColor"
         android:textAllCaps="true"
         android:layout_margin="8dp"/>
@@ -38,7 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/dialogButtonBackgroundColor"
-        android:text="NO"
+        android:text="@string/noText"
         android:textAllCaps="true"
         android:layout_margin="8dp"/>
 </LinearLayout>

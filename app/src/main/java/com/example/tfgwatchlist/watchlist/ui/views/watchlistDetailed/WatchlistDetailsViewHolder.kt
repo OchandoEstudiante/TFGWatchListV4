@@ -17,5 +17,4 @@ class WatchlistDetailsViewHolder(private val binding: ItemWacthlistsearchactorBi
             .load(generarURL("w780${actor.imagenPerfil}"))
             .into(binding.itemActorImage)
     }
-
 }

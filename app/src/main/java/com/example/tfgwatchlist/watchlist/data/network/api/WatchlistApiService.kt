@@ -1,12 +1,17 @@
 package com.example.tfgwatchlist.watchlist.data.network.api
 
+import com.example.tfgwatchlist.login.data.models.LoginRequest
+import com.example.tfgwatchlist.login.data.models.LoginResponse
 import com.example.tfgwatchlist.watchlist.data.network.model.General.CreditsResponse
 import com.example.tfgwatchlist.watchlist.data.network.model.PeliculaDetailsResponse
 import com.example.tfgwatchlist.watchlist.data.network.model.PeliculasResponse
 import com.example.tfgwatchlist.watchlist.data.network.model.SerieDetailsResponse
 import com.example.tfgwatchlist.watchlist.data.network.model.SerieDetailsSeasonsResponse
 import com.example.tfgwatchlist.watchlist.data.network.model.SeriesResponse
+import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -44,4 +49,15 @@ interface WatchlistApiService {
     @GET("movie/{id}/credits")
     suspend fun getCreditsMovie(@Path("id")movieId: String): CreditsResponse
     //
+
+    //Funcion para hacer login
+    @POST("login")
+    suspend fun login(
+        @Body request: LoginRequest
+    ): Response<LoginResponse>
+
+    /*@POST("newUser")
+    suspend fun createUser(
+        @Body request:
+    ): Response<>*/
 }

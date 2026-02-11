@@ -3,7 +3,30 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/yourWatchlistFragment">
+    app:startDestination="@id/loginScreenFragment">
+
+    <fragment
+        android:id="@+id/loginScreenFragment"
+        android:name="com.example.tfgwatchlist.login.ui.views.loginScreen.LoginScreenFragment"
+        android:label="loginScreen"
+        tools:layout="@layout/fragment_login_screen">
+
+        <action
+            android:id="@+id/action_loginFragment_to_registrationFragment"
+            app:destination="@+id/registrationScreenFragment"/>
+
+        <action
+            android:id="@+id/action_loginFragment_to_yourWatchlistFragment"
+            app:destination="@id/yourWatchlistFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/registrationScreenFragment"
+        android:name="com.example.tfgwatchlist.login.ui.views.RegistrationScreen.RegistrationScreenFragment"
+        android:label="registerScreen"
+        tools:layout="@layout/fragment_registration_screen">
+
+    </fragment>
 
     <fragment
         android:id="@+id/watchlistFragment"
@@ -13,9 +36,11 @@
         <action
             android:id="@+id/action_watchlistFragment_to_watchlistDetailedFragment"
             app:destination="@+id/watchlistDetailsFragment"/>
+        <!-- <argument
+            android:name="userName"
+            app:argType="string"
+            /> -->
     </fragment>
-
-
 
     <fragment
         android:id="@+id/watchlistDetailsFragment"
@@ -32,6 +57,10 @@
         <argument
             android:name="typeMedia"
             app:argType="string"/>
+
+        <!--<argument
+            android:name="userList"
+            app:argType="string"/> -->
     </fragment>
 
     <fragment
@@ -42,6 +71,10 @@
         <argument
             android:name="serieId"
             app:argType="integer"/>
+
+        <!--<argument
+            android:name="userList"
+            app:argType="string"/> -->
     </fragment>
 
     <fragment
@@ -53,6 +86,14 @@
         <action
             android:id="@+id/action_yourWatchlistFragment_to_yourWatchlistDetailedFragment"
             app:destination="@+id/yourWatchlistDetailedFragment"/>
+
+        <action
+            android:id="@+id/action_yourWatchlistFragment_to_loginScreenFragment"
+            app:destination="@id/loginScreenFragment"/>
+
+        <argument
+            android:name="userName"
+            app:argType="string"/>
     </fragment>
 
     <fragment
@@ -64,6 +105,10 @@
         <argument
             android:name="media"
             app:argType="com.example.tfgwatchlist.yourwatchlist.data.network.model.ItemMediaMongoItem"/>
+
+        <argument
+            android:name="userName"
+            app:argType="string"/>
 
         <action
             android:id="@+id/action_yourWatchlistDetailedFragment_to_yourWatchlistEpisodesFragment"

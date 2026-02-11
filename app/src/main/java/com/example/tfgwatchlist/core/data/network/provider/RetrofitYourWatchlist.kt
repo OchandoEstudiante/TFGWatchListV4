@@ -9,7 +9,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 object RetrofitYourWatchlist {
 
-    private const val API_BASE_URL = "https://pruebadebackend.onrender.com/"
+    private const val API_BASE_URL = "https://backendv2-9cqf.onrender.com/"
 
     fun provideMoshi() = Moshi.Builder()
         .addLast(KotlinJsonAdapterFactory())

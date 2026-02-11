@@ -1,23 +1,39 @@
 <resources>
     <string name="app_name">TFGWatchList</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <!--Textos generales-->
+    <string name="statusText">Estado: </string>
     <string name="confirmText">Confirmar</string>
     <string name="acceptText">Aceptar</string>
     <string name="cancelText">Cancelar</string>
     <string name="noText">No</string>
     <string name="yesText">Si</string>
+    <string name="seasonsSingular">" Temporada"</string>
+    <string name="seasonsPlural">" Temporadas"</string>
+    <string name="hoursSingular">" hora "</string>
+    <string name="hoursPlural">" horas "</string>
+    <string name="minutesPlural">minutos</string>
+    <string name="statusMediaTextAll">Todas</string>
+    <string name="statusMediaTextWatching">Viendo</string>
+    <string name="statusMediaTextWatched">Vista</string>
+    <string name="statusMediaTextHalfWatched">A medias</string>
+    <string name="statusMediaTextToBeSeen">Por ver</string>
+    <string name="comingSoonText">Proximamente</string>
+    <string name="welcomeText">Bienvenid@</string>
+    <string name="yourWatchlistText">Tu watchlist</string>
+    <string name="addText">Agregar</string>
     <!-- Textos para la parte online-->
     <string name="noSeriesFound">No se encontraron series en la API con el nombre que has proporcionado</string>
     <string name="noMoviesFound">No se encontraron peliculas en la API con el nombre que has proporcionado</string>
-    <string name="noItemsFound">Hello blank fragment</string>
-    <string name="errorSearch">Hello blank fragment</string>
-    <string name="inCaseOfEmptyApi">Hello blank fragment</string>
-
+    <string name="noItemsFound" translatable="false">Hello blank fragment</string>
+    <string name="errorSearch" translatable="false">Hello blank fragment</string>
+    <string name="inCaseOfEmptyApi" translatable="false">Hello blank fragment</string>
     <string name="btnAddYourWatchlist">Agregar a tu watchlist</string>
     <!-- Dialogs -->
     <string name="dialogConfirmationAddHeader">Añadir a tu watchlist: </string>
     <string name="dialogConfirmationAddBody">Desea añadir esta serie a tu watchlist?</string>
+    <string name="dialogConfirmationAddBodyPart1Series">Desea añadir la serie </string>
+    <string name="dialogConfirmationAddBodyPart1Movies">Desea añadir la pelicula </string>
+    <string name="dialogConfirmationAddBodyPart2Both"> a su watchlist?</string>
     <string name="dialogTextHeaderChangeStatus">Cambiar estado</string>
     <string name="dialogTextHeaderConfirmedDeletion">Eliminación completa:</string>
     <string name="dialogTextBodyConfirmedDeletionPart1">Se eliminó </string>
@@ -28,18 +44,33 @@
     <string name="dialogRadioButtonToBeSeen">Por ver</string>
     <string name="dialogButtonConfirmation">Confirmar</string>
     <string name="dialogButtonCancel">Cancelar</string>
-
+    <string name="dialogTextHeaderDeletion">Eliminar </string>
+    <string name="dialogTextBodyDeletionPart1Movies">Deseas eliminar la película </string>
+    <string name="dialogTextBodyDeletionPart1Series">Deseas eliminar la serie </string>
+    <string name="dialogTextBodyDeletionPart2Both">de tu watchlist? La accio no es reversible</string>
     <!-- Textos para la parte de tu watchlist-->
-    <string name="statusMediaTextAll">Todas</string>
-    <string name="statusMediaTextWatching">Viendo</string>
-    <string name="statusMediaTextWatched">Vista</string>
-    <string name="statusMediaTextHalfWatched">A medias</string>
-    <string name="statusMediaTextToBeSeen">Por ver</string>
     <string name="buttonTextWatchSeasonsSerie">Ver temporadas</string>
-
     <string name="buttonTextChangeStatusMedia">Cambiar estado</string>
     <string name="buttonTextDeleteMedia">Eliminar de watchlist</string>
-
     <string name="spinnerStateGeneralInfo">Ficha general</string>
     <string name="spinnerStateCast">Reparto</string>
+    <string name="noSeriesFoundAtYourWatchlist">No se han encontrado series en tu watchlist</string>
+    <string name="noMoviesFoundAtYourWatchlist">No se han encontrado películas en tu watchlist</string>
+    <string name="noSeriesFoundByFiltersAtYourWatchlist">No se han encontrado series que coincidan con los parametros de busqueda</string>
+    <string name="noMoviesFoundByFiltersAtYourWatchlist">No se han encontrado películas que coincidan con los parametros de busqueda</string>
+    <string name="movieAddedTextPart1">Se agregó la película </string>
+    <string name="movieAddedTextPart2">a la lista del usuario </string>
+    <string name="serieAddedTextPart1">Se agregó la serie </string>
+    <string name="serieAddedTextPart2">a la lista del usuario</string>
+    <string name="movieAlreadyInWatchlist">Esta película ya está en tu watchlist</string>
+    <string name="serieAlreadyInWatchlist">Esta serie ya está en tu watchlist</string>
+    <!-- Textos para los logins de usuarios -->
+    <string name="userNameText">Nombre de usuario:</string>
+    <string name="userPasswordText">Contraseña:</string>
+    <string name="loginText">Iniciar sesión</string>
+    <string name="registerText">Registrar</string>
+    <string name="userMailText">Correo electronico:</string>
+    <string name="userMailHintText">Introduzca el correo electronico:</string>
+    <string name="userPasswordHintText">Introduzca la contraseña</string>
+    <string name="userNameHintText">Introduzca el nombre del usuario</string>
 </resources>

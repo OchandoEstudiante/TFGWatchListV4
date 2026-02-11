@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -15,7 +16,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tfgwatchlist.R
+import com.example.tfgwatchlist.core.datastore.AuthDataStore
 import com.example.tfgwatchlist.databinding.FragmentWatchlistBinding
+import com.example.tfgwatchlist.shared.UserViewModel
 import com.example.tfgwatchlist.watchlist.data.network.model.MediaItem
 import com.example.tfgwatchlist.watchlist.data.network.model.PeliculaResponse
 import com.example.tfgwatchlist.watchlist.data.network.model.SerieResponse
@@ -30,7 +33,8 @@ class Watchlist_Fragment : Fragment() {
     //
     private lateinit var binding: FragmentWatchlistBinding
     private lateinit var modo: String
-
+    private lateinit var nombreUsuario: String
+    //private val userViewModel: UserViewModel by activityViewModels()
     private val viewModel by viewModels<WatchlistViewModel>{
         WatchlistViewModel.Factory
     }
@@ -65,11 +69,21 @@ class Watchlist_Fragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initUI()
-        observeUI()
 
-        binding.rvWatchlistSearch.layoutManager = LinearLayoutManager(requireContext())
-        binding.rvWatchlistSearch.adapter = adapter
+        val authDataStore = AuthDataStore(requireContext())
+        lifecycleScope.launch {
+            authDataStore.userToken.collect { storedUserName ->
+                storedUserName?.let {
+                    nombreUsuario = storedUserName
+                    Log.i("ChandoNameUser", nombreUsuario)
+                    initUI()
+                    observeUI()
+                    binding.rvWatchlistSearch.layoutManager = LinearLayoutManager(requireContext())
+                    binding.rvWatchlistSearch.adapter = adapter
+                }
+            }
+        }
+        //nombreUsuario = userViewModel.returnUserName().toString()
     }
 
     private fun observeUI(){
@@ -116,16 +130,6 @@ class Watchlist_Fragment : Fragment() {
                                     adapter.submitList(uiState.items)
                                 }
                             }
-                            /*
-                            if(uiState.items.size == 0){
-                                binding.rvWatchlistSearch.isVisible = false
-                                binding.tvWatchlistSearchInfo.text = "Sample"
-                            } else {
-                                Log.i("Chando", "Funciona: ${uiState.items.toString()}")
-                                binding.rvWatchlistSearch.isVisible = true
-                                binding.tvWatchlistSearchInfo.text = ""
-                                adapter.submitList(uiState.items)
-                            }*/
                         }
                     }
                 }

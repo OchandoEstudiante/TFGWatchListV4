@@ -20,6 +20,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.tfgwatchlist.R
+import com.example.tfgwatchlist.core.datastore.AuthDataStore
 import com.example.tfgwatchlist.core.utils.generarURL
 import com.example.tfgwatchlist.core.utils.generarURLYoutube
 import com.example.tfgwatchlist.databinding.DialogTaskChangestatefrommediaBinding
@@ -39,6 +40,7 @@ class YourWatchlistDetailedFragment : Fragment() {
 
     private lateinit var binding: FragmentYourWatchlistDetailedBinding
     private lateinit var adapterReparto: YourWatchlistDetailedAdapter
+    private lateinit var nombreUsuario: String
     //Pendiente esto
     private val viewModel by viewModels<YourWatchlistDetailedViewModel> {
         YourWatchlistDetailedViewModel.Factory
@@ -53,12 +55,30 @@ class YourWatchlistDetailedFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val media = arguments?.getSerializable("media") as ItemMediaMongoItem
+        val authDataStore = AuthDataStore(requireContext())
+        lifecycleScope.launch {
+            authDataStore.userToken.collect { storedUserName ->
+                storedUserName?.let{
+                    nombreUsuario = storedUserName
+                    val media = arguments?.getSerializable("media") as ItemMediaMongoItem
+                    //nombreUsuario = arguments?.getSerializable("userName") as String
+                    adapterReparto = YourWatchlistDetailedAdapter()
+                    binding.rvYourWatchlistDetailsCast.layoutManager = LinearLayoutManager(requireContext())
+                    binding.rvYourWatchlistDetailsCast.adapter = adapterReparto
+                    initUI(media);
+                    observeUI();
+                }
+
+            }
+        }
+        /*val media = arguments?.getSerializable("media") as ItemMediaMongoItem
+        //nombreUsuario = arguments?.getSerializable("userName") as String
         adapterReparto = YourWatchlistDetailedAdapter()
         binding.rvYourWatchlistDetailsCast.layoutManager = LinearLayoutManager(requireContext())
-        //binding.rvYourWatchlistDetailsCast.adapter = adapterReparto
+        binding.rvYourWatchlistDetailsCast.adapter = adapterReparto
         initUI(media);
         observeUI();
+        */
     }
     private fun initUI(itemMedia: ItemMediaMongoItem){
         when(itemMedia){
@@ -70,7 +90,7 @@ class YourWatchlistDetailedFragment : Fragment() {
             }
         }
         rellenarData(itemMedia)
-        setSpinnerMedia()
+        setSpinnerMedia(itemMedia)
     }
 
     private fun observeUI(){
@@ -83,6 +103,19 @@ class YourWatchlistDetailedFragment : Fragment() {
                         }
                         YourWatchlistDetailedUiState.Loading -> {
                             Log.i("ObserveUI", "Loading")
+                            binding.pbCastYourWatchlist.isVisible = true
+                        }
+                        is YourWatchlistDetailedUiState.Error -> {
+                            Log.i("Chando", uiState.message)
+                            binding.tvInfoCastYourWatchlist.text = uiState.message
+                            binding.pbCastYourWatchlist.isVisible = false
+                        }
+                        is YourWatchlistDetailedUiState.Success -> {
+                            Log.i("Chando", "${uiState.casts}")
+                            binding.rvYourWatchlistDetailsCast.isVisible = true;
+                            binding.tvInfoCastYourWatchlist.text = ""
+                            binding.pbCastYourWatchlist.isVisible = false
+                            adapterReparto.submitList(uiState.casts)
                         }
                     }
                 }
@@ -106,7 +139,7 @@ class YourWatchlistDetailedFragment : Fragment() {
             .load(generarURL("original${mediaItem.banner}"))
             .into(binding.ivYourWatchlistDetailsImagenBanner)
 
-        binding.tvYourWatchlistDetailsState.text = "Estado: ${mediaItem.estado}"
+        binding.tvYourWatchlistDetailsState.text = getString(R.string.statusText) + mediaItem.estado
 
         if(mediaItem.trailer != null){
             binding.imgBtnVerTrailer.setOnClickListener {
@@ -125,14 +158,14 @@ class YourWatchlistDetailedFragment : Fragment() {
         when(mediaItem){
             is MovieMongoItem -> {
                 binding.btnMostrarTemporadas.isVisible = false
-                binding.tvGeneralInfoYourWatchlistDetails.text = tratamientoDeFechas(mediaItem.fechaEstreno).toString() + " - " + mediaItem.duracion + " minutos"
+                binding.tvGeneralInfoYourWatchlistDetails.text = tratamientoDeFechas(mediaItem.fechaEstreno)+ " - " + treatDuration(mediaItem.duracion)
             }
             is SerieMongoItem -> {
                 //Ver como hacer que se pueda mandar a otro fragment una lista de elementos data class (temporadas)
                 val action = YourWatchlistDetailedFragmentDirections
                     .actionYourWatchlistDetailedFragmentToYourWatchlistEpisodesFragment(mediaItem.id)
                 binding.btnMostrarTemporadas.isVisible = true
-                binding.tvGeneralInfoYourWatchlistDetails.text = tratamientoDeFechas(mediaItem.fechaEstreno).toString() + " - " + mediaItem.numeroTemporadas + " temporadas"
+                binding.tvGeneralInfoYourWatchlistDetails.text = tratamientoDeFechas(mediaItem.fechaEstreno)+ " - " + treatSeasons(mediaItem.numeroTemporadas)
                 binding.btnMostrarTemporadas.setOnClickListener {
                     findNavController().navigate(action)
                     Log.i("Ver temporadas", "Click en ver las temporadas de ${mediaItem.nombre}")
@@ -149,7 +182,7 @@ class YourWatchlistDetailedFragment : Fragment() {
         }
     }
 
-    private fun setSpinnerMedia(){
+    private fun setSpinnerMedia(mediaItem: ItemMediaMongoItem){
         val opciones = listOf(getString(R.string.spinnerStateGeneralInfo), getString(R.string.spinnerStateCast))
         val opcionesAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, opciones)
         opcionesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -171,6 +204,7 @@ class YourWatchlistDetailedFragment : Fragment() {
                         binding.conLayoutGeneralInfo.isVisible = false
                         binding.conLayoutCastInfo.isVisible = true
                         Log.i("Spinner YourWatchlistDetailed", "Seleccionado en reparto")
+                        viewModel.fetchCast(mediaItem)
                     }
                 }
 
@@ -186,21 +220,21 @@ class YourWatchlistDetailedFragment : Fragment() {
         val binding = DialogTaskDeletefromyourwatchlistBinding.inflate(layoutInflater)
         dialog.setContentView(binding.root)
 
-        binding.tvHeaderDeleteFromYourWatchlist.text = "Eliminar ${mediaItem.nombre}:"
+        binding.tvHeaderDeleteFromYourWatchlist.text = getString(R.string.dialogTextHeaderDeletion) + "${mediaItem.nombre}:"
 
         when(mediaItem){
             is MovieMongoItem -> {
-                binding.tvBodyDeleteFromYourWatchlist.text = "Deseas eliminar la película ${mediaItem.nombre} de tu watchlist? La accio no es reversible"
+                binding.tvBodyDeleteFromYourWatchlist.text = getString(R.string.dialogTextBodyDeletionPart1Movies) + " ${mediaItem.nombre} " + getString(R.string.dialogTextBodyDeletionPart2Both)
             }
             is SerieMongoItem -> {
-                binding.tvBodyDeleteFromYourWatchlist.text = "Deseas eliminar la serie ${mediaItem.nombre} de tu watchlist? La acción no es reversible"
+                binding.tvBodyDeleteFromYourWatchlist.text =  getString(R.string.dialogTextBodyDeletionPart1Series) + " ${mediaItem.nombre} " + getString(R.string.dialogTextBodyDeletionPart2Both)
             }
         }
 
         //Hacer la función de eliminación más responsiva
         binding.btnDialogDeleteFromYourWatchlistConfirm.setOnClickListener {
             Log.i("Confirmacion borrado", "El usuario confirma que quiere borrar ${mediaItem.nombre}")
-            viewModel.deleteMedia(mediaItem)
+            viewModel.deleteMedia(nombreUsuario, mediaItem)
             dialog.dismiss()
             showDialogDeletionConfirmed(mediaItem.nombre)
         }
@@ -239,7 +273,7 @@ class YourWatchlistDetailedFragment : Fragment() {
             Log.i("Confirmación de cambio", "El usuario confirma el cambio de ${mediaItem.nombre} poniendolo en ${estado}")
             dialog.dismiss()
             if(estado != null){
-                viewModel.changeStateMedia(mediaItem, estado)
+                viewModel.changeStateMedia(nombreUsuario, mediaItem, estado)
             }
         }
         dialog.show()
@@ -264,13 +298,34 @@ class YourWatchlistDetailedFragment : Fragment() {
         dialog.show()
     }
 
+    private fun treatSeasons(numeroTemporadas: Int): String{
+        if(numeroTemporadas > 1){
+            return "${numeroTemporadas}" + getString(R.string.seasonsPlural)
+        } else {
+            return "${numeroTemporadas}" + getString(R.string.seasonsSingular)
+        }
+    }
 
-    private fun tratamientoDeFechas(fechaString: String?): LocalDate{
-        return LocalDate.parse(fechaString, DateTimeFormatter.ISO_LOCAL_DATE)
+    private fun treatDuration(minutos: Int): String{
+        if(minutos < 59){
+            return "${minutos} minutos"
+        } else {
+            val horas = minutos / 60
+            val minRes = minutos % 60
+            if(horas > 1){
+                return horas.toString() + getString(R.string.hoursPlural) +
+                        minRes+ getString(R.string.minutesPlural)
+            } else {
+                return horas.toString() + getString(R.string.hoursSingular) +
+                        minRes + getString(R.string.minutesPlural)
+            }
+        }
+    }
+    private fun tratamientoDeFechas(fechaString: String?): String{
+        val fecha = LocalDate.parse(fechaString, DateTimeFormatter.ISO_LOCAL_DATE)
+        return "${fecha.dayOfMonth} ${fecha.month} ${fecha.year}"
     }
 }
 //Lista de pendientes
-//-Agregar responsibidad a la eliminación de un elemento
-//-Agregar la respuesta de cast
-//-Agregar el tratamiento de fechas tanto a la version your como a la busqueda
-//-Terminar la muestra de episodios y hacer pruebas con series terminadas(Cowboy bebop) como en curso (Cinderrella Gray)
+//-Hacer pruebas de muestras de episodios con series terminadas(Cowboy bebop) como en curso (Cinderrella Gray)
+//Mayormente ya está todo terminado, si acaso se podrian agregar detalles de responsibidad

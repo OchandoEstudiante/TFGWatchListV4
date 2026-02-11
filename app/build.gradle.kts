@@ -1,7 +1,13 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("androidx.navigation.safeargs.kotlin")
+}
+
+val localProperties =Properties().apply{
+    load(rootProject.file("local.properties").inputStream())
 }
 
 android {
@@ -14,8 +20,12 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField(
+            "String",
+            "API_TOKEN",
+            "\"${localProperties["API_TOKEN"]}\""
+        )
     }
 
     buildTypes {
@@ -37,6 +47,7 @@ android {
 
     buildFeatures{
         viewBinding= true
+        buildConfig = true
     }
 }
 
@@ -78,5 +89,6 @@ dependencies {
     implementation ("androidx.navigation:navigation-ui-ktx:2.7.7")
     implementation(libs.glide)
     implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.11")
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
     //implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 }

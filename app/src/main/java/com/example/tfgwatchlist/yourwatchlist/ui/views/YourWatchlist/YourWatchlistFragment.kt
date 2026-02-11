@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter
 import androidx.appcompat.widget.SearchView
 import androidx.compose.ui.graphics.BlurEffect
 import androidx.core.view.isVisible
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -18,11 +19,15 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tfgwatchlist.R
+import com.example.tfgwatchlist.core.datastore.AuthDataStore
 import com.example.tfgwatchlist.databinding.FragmentWatchlistDetailedBinding
 import com.example.tfgwatchlist.databinding.FragmentYourWatchlistBinding
+import com.example.tfgwatchlist.shared.UserViewModel
 import com.example.tfgwatchlist.yourwatchlist.data.network.model.ItemMediaMongoItem
 import com.example.tfgwatchlist.yourwatchlist.data.network.model.MovieMongoItem
 import com.example.tfgwatchlist.yourwatchlist.data.network.model.SerieMongoItem
+import com.example.tfgwatchlist.yourwatchlist.domain.MediaStatus
+import com.example.tfgwatchlist.yourwatchlist.ui.model.SpinnerItemUi
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -31,9 +36,9 @@ import kotlinx.coroutines.launch
 class YourWatchlistFragment : Fragment() {
 
     private lateinit var binding: FragmentYourWatchlistBinding
-
     private lateinit var modo: String
-
+    private lateinit var nombreUsuario: String
+    private val userViewModel: UserViewModel by activityViewModels()
     private val viewModel by viewModels<YourWatchlistViewModel>{
         YourWatchlistViewModel.Factory
     }
@@ -45,13 +50,13 @@ class YourWatchlistFragment : Fragment() {
             is MovieMongoItem -> {
                 Log.i("Chando", "Click en serie de tu watchlist: ${item.nombre}")
                 val action = YourWatchlistFragmentDirections
-                    .actionYourWatchlistFragmentToYourWatchlistDetailedFragment(item)
+                    .actionYourWatchlistFragmentToYourWatchlistDetailedFragment(item, nombreUsuario)
                 findNavController().navigate(action)
             }
             is SerieMongoItem -> {
                 Log.i("Chando", "Click en serie de tu watchlist: ${item.nombre}")
                 val action = YourWatchlistFragmentDirections
-                    .actionYourWatchlistFragmentToYourWatchlistDetailedFragment(item)
+                    .actionYourWatchlistFragmentToYourWatchlistDetailedFragment(item, nombreUsuario)
                 findNavController().navigate(action)
             }
         }
@@ -69,13 +74,24 @@ class YourWatchlistFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initUI()
-        observeUI()
 
+        val authDataStore = AuthDataStore(requireContext())
+        lifecycleScope.launch {
+            authDataStore.userToken.collect { storedUserName ->
+                storedUserName?.let {
+                    nombreUsuario = it
+                    initUI(nombreUsuario)
+                }
+            }
+        }
+        //val args = YourWatchlistFragmentArgs.fromBundle(requireArguments())
+        //userViewModel.setUserName(args.userName)
+        //nombreUsuario = arguments?.getSerializable("userName") as String
+        //initUI(nombreUsuario)
+        observeUI()
         binding.rvWatchlistSearch.layoutManager = LinearLayoutManager(requireContext())
         binding.rvWatchlistSearch.adapter = adapter
         modo = "Series"
-        viewModel.fetchSeries()
     }
 
     private fun observeUI(){
@@ -103,7 +119,7 @@ class YourWatchlistFragment : Fragment() {
                             if(modo == "Series"){
                                 if(uiState.items.size == 0){
                                     binding.rvWatchlistSearch.isVisible = false
-                                    binding.tvWatchlistSearchInfo.text = "No se han podido encontrar series"
+                                    binding.tvWatchlistSearchInfo.text = getString(R.string.noSeriesFoundAtYourWatchlist)
                                 } else {
                                     binding.rvWatchlistSearch.isVisible = true
                                     binding.tvWatchlistSearchInfo.text = ""
@@ -112,7 +128,7 @@ class YourWatchlistFragment : Fragment() {
                             } else {
                                 if(uiState.items.size == 0){
                                     binding.rvWatchlistSearch.isVisible = false
-                                    binding.tvWatchlistSearchInfo.text = "No se han podido encontrar películas"
+                                    binding.tvWatchlistSearchInfo.text = getString(R.string.noMoviesFoundAtYourWatchlist)
                                 } else {
                                     binding.rvWatchlistSearch.isVisible = true
                                     binding.tvWatchlistSearchInfo.text = ""
@@ -121,13 +137,35 @@ class YourWatchlistFragment : Fragment() {
                             }
                             Log.i("Chando", "Exito en tu watchlist")
                         }
+
+                        is YourWatchlistUiState.SuccessFiltered -> {
+                            if(modo == "Series"){
+                                if(uiState.items.size == 0){
+                                    binding.rvWatchlistSearch.isVisible = false
+                                    binding.tvWatchlistSearchInfo.text = getString(R.string.noSeriesFoundByFiltersAtYourWatchlist)
+                                } else {
+                                    binding.rvWatchlistSearch.isVisible = true
+                                    binding.tvWatchlistSearchInfo.text = ""
+                                    adapter.submitList(uiState.items)
+                                }
+                            } else {
+                                if(uiState.items.size == 0){
+                                    binding.rvWatchlistSearch.isVisible = false
+                                    binding.tvWatchlistSearchInfo.text = getString(R.string.noMoviesFoundByFiltersAtYourWatchlist)
+                                } else {
+                                    binding.rvWatchlistSearch.isVisible = true
+                                    binding.tvWatchlistSearchInfo.text = ""
+                                    adapter.submitList(uiState.items)
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
     }
 
-    private fun initUI(){
+    private fun initUI(userName: String){
         //Pendiente programar el cambio de iconos
         binding.btnChangeWatchlistSearch.setOnClickListener {
             Log.i("Chando", "Click en cambio")
@@ -138,26 +176,42 @@ class YourWatchlistFragment : Fragment() {
                 modo = "Series"
                 binding.btnChangeWatchlistSearch.setImageResource(R.drawable.ic_television)
             }
+            searchLocal(userName)
         }
 
+        binding.tvInfoUser.text = getString(R.string.welcomeText) + ", ${nombreUsuario}"
+
         binding.btnReloadWatchlistSearch.setOnClickListener {
-            if(modo == "Series"){
-                viewModel.fetchSeries()
-            } else {
-                viewModel.fetchPeliculas()
-            }
             Log.i("Chando", "Click en recarga")
-            searchLocal()
+            searchLocal(userName)
         }
-        setSpinner()
-        setSearchBar()
+
+        binding.btnCloseSessionUser.setOnClickListener {
+            lifecycleScope.launch {
+                val authDataStore = AuthDataStore(requireContext())
+                authDataStore.clearSession()
+
+                /*val action = YourWatchlistFragmentDirections
+                    .actionYourWatchlistFragmentToLoginScreenFragment()
+                findNavController().navigate(action)*/
+            }
+        }
+        setSpinner(userName)
+        setSearchBar(userName)
     }
 
     //Pendiente programar el spinner
-    private fun setSpinner(){
-        val estados = listOf(getString(R.string.statusMediaTextAll),getString(R.string.statusMediaTextWatching) ,
-            getString(R.string.statusMediaTextWatched), getString(R.string.statusMediaTextHalfWatched),
-            getString(R.string.statusMediaTextToBeSeen))
+    private fun setSpinner(userName: String){
+        val estados = listOf(
+            SpinnerItemUi(MediaStatus.ALL, getString(R.string.statusMediaTextAll)),
+            SpinnerItemUi(MediaStatus.WATCHING, getString(R.string.statusMediaTextWatching)),
+            SpinnerItemUi(MediaStatus.WATCHED,getString(R.string.statusMediaTextWatched)),
+            SpinnerItemUi(MediaStatus.HALF_WATCHED, getString(R.string.statusMediaTextHalfWatched)),
+            SpinnerItemUi(MediaStatus.TO_BE_SEEN, getString(R.string.statusMediaTextToBeSeen))
+        )
+        //val estados = listOf(getString(R.string.statusMediaTextAll),getString(R.string.statusMediaTextWatching) ,
+            //getString(R.string.statusMediaTextWatched), getString(R.string.statusMediaTextHalfWatched),
+            //getString(R.string.statusMediaTextToBeSeen))
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, estados)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spFiltersYourWatchlist.adapter = adapter
@@ -169,7 +223,7 @@ class YourWatchlistFragment : Fragment() {
                     position: Int,
                     id: Long
                 ) {
-                    Log.i("Filtro", estados[position])
+                    searchLocal(userName)
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -178,17 +232,10 @@ class YourWatchlistFragment : Fragment() {
             }
     }
 
-    private fun setSearchBar(){
-        val spinner = binding.spFiltersYourWatchlist
+    private fun setSearchBar(userName: String){
         binding.svWatchlistSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
-                if(spinner.selectedItem.toString() == "Todas"){
-                    Log.i("Chando", "Sin filtros")
-                } else {
-                    Log.i("Chando", "${spinner.selectedItem}")
-                }
-
-                Log.i("Busqueda local", "${query} ${spinner.selectedItem}")
+                searchLocal(userName)
                 return false
             }
             override fun onQueryTextChange(newText: String?): Boolean {
@@ -198,40 +245,31 @@ class YourWatchlistFragment : Fragment() {
     }
 
     //Funcion general de busqueda
-    private fun searchLocal(){
-        val spinner = binding.spFiltersYourWatchlist
-        val searchBar = binding.svWatchlistSearch
-        if(searchBar.query.toString().length == 0){
-            if(spinner.selectedItem.toString() == "Todas"){
-                Log.i("searchLocal", "Spinner: ${spinner.selectedItem} Searchbar: ${searchBar.query}")
-                Log.i("searchLocal", "Sin Query sin filtro")
-                if(modo == "Series"){
-                    viewModel.fetchSeries()
-                } else {
-                    viewModel.fetchPeliculas()
-                }
+    private fun searchLocal(userName: String){
+        val spinnerItem = binding.spFiltersYourWatchlist.selectedItem as SpinnerItemUi
+        val status = spinnerItem.status
+        val searchBarQuery = binding.svWatchlistSearch.query.toString()
+        if(searchBarQuery.length == 0 && status == MediaStatus.ALL){
+            if(modo == "Series"){
+                viewModel.fetchSeries(userName)
             } else {
-                if(modo == "Series"){
-
-                } else {
-
-                }
-                Log.i("searchLocal", "Spinner: ${spinner.selectedItem} Searchbar: ${searchBar.query}")
-                Log.i("searchLocal", "Sin Query Con filtro")
+                viewModel.fetchPeliculas(userName)
             }
         } else {
-            if(spinner.selectedItem.toString() == "Todas"){
-                Log.i("searchLocal", "Spinner: ${spinner.selectedItem} Searchbar: ${searchBar.query}")
-                Log.i("searchLocal", "Con Query sin filtro")
+            if(modo == "Series"){
+                viewModel.fetchSeriesFiltered(userName, status.key, searchBarQuery)
             } else {
-                Log.i("searchLocal", "Spinner: ${spinner.selectedItem} Searchbar: ${searchBar.query}")
-                Log.i("searchLocal", "Con Query con filtro")
+                viewModel.fetchMoviesFiltered(userName, status.key, searchBarQuery)
             }
         }
     }
 }
 
+//Bugs encontrados:
+//Ninguno de momento
 //Pendiente:
-//-Programación de las busquedas de query y filtros
 //-Poner un texto informatico en caso de errores, timeouts, falta de respuesta, etc
-//-Hacer que el boton cambie de icono al hacerle click
+//- Agregar traduccion y que sea funcional(ver mayormente como traducir objetos de viewHolder y como hacer que se traten cosas de forma distinta según el idioma del usuario)
+//Completo:
+//-Busqueda filtrada de series y películas
+//-Boton cambiante

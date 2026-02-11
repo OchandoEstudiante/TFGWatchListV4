@@ -7,6 +7,6 @@ data class EpisodioMongoItem (
     @Json(name="premisaEpisodio") val premisaEpisodio: String,
     @Json(name="numeroEpisodio") val numeroEpisodio: String,
     @Json(name="imagenEpisodio") val imagenEpisodio: String?,
-    @Json(name="fecha_emisión") val fecha_emision: String?,
+    @Json(name="fecha_emision") val fecha_emision: String?,
     @Json(name="duracion") val duracion: Int?,
 )

@@ -8,4 +8,5 @@ sealed class YourWatchlistUiState {
     data object Empty: YourWatchlistUiState()
     data class Error(val message: String): YourWatchlistUiState()
     data class Success(val items: List<ItemMediaMongoItem>): YourWatchlistUiState()
+    data class SuccessFiltered(val items: List<ItemMediaMongoItem>): YourWatchlistUiState()
 }

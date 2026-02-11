@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--Pendiente agregar los iconos, el de agregar un más y el otro ya veré-->
     <item
         android:id="@+id/yourWatchlistFragment"
-        android:title="Local" />
+        android:icon="@drawable/ic_format_list"
+        android:title="Tu watchlist" />
     <item
         android:id="@+id/watchlistFragment"
-        android:title="Online" />
+        android:icon="@drawable/ic_search"
+        android:title="Agregar" />
 </menu>

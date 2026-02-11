@@ -23,6 +23,8 @@ import com.example.tfgwatchlist.databinding.FragmentYourWatchlistEpisodesBinding
 import com.example.tfgwatchlist.yourwatchlist.data.network.model.TemporadaMongoItem
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class YourWatchlistEpisodesFragment : Fragment() {
 
@@ -127,12 +129,28 @@ class YourWatchlistEpisodesFragment : Fragment() {
     }
     private fun showSeasonData(temporadaMongoItem: TemporadaMongoItem){
         binding.tvPremisaTemporadaWatchlistTemporada.text = temporadaMongoItem.premisaTemporada
-        binding.tvTituloTemporadaWatchlistTemporada.text = temporadaMongoItem.nombreTemporada
+        binding.tvTituloTemporadaWatchlistTemporada.text = "S${temporadaMongoItem.numeroTemporada}:"+ temporadaMongoItem.nombreTemporada
 
         Glide.with(binding.root.context)
             .load(generarURL("w342${temporadaMongoItem.posterTemporada}"))
             .into(binding.ivSerieImageWatchlistTemporada)
+
+        tratoFechas(temporadaMongoItem.fecha)
+
+    }
+
+    fun tratoFechas(fechaString: String?){
+        val fecha = LocalDate.parse(fechaString, DateTimeFormatter.ISO_LOCAL_DATE)
+        if(fecha.isAfter(LocalDate.now())){
+            Log.i("Tiempo", "Después")
+            binding.tvDateSeason.text = "Esta temporada aún no se ha emitido"
+        } else {
+            binding.tvDateSeason.text = "${fecha.dayOfMonth} ${fecha.month} ${fecha.year}"
+        }
     }
 }
 
 //Semifunciona, hacer más tarde pruebas EXTENSAS para probar su funcionamiento en detalles
+//Pendiente:
+//Agregar un texto para premisas vacias, ver si sería posible agregar fondo al banner de temporadas
+//Tratamiento de fechas, poner si algo se estrena proximamente o no, etc

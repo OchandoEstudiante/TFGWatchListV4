@@ -5,12 +5,16 @@ import com.example.tfgwatchlist.watchlist.data.network.model.MediaItemDetails
 import com.example.tfgwatchlist.watchlist.data.network.model.PeliculaDetailsResponse
 import com.example.tfgwatchlist.watchlist.data.network.model.SerieDetailsEpisodesResponse
 import com.example.tfgwatchlist.watchlist.data.network.model.SerieDetailsResponse
+import com.example.tfgwatchlist.yourwatchlist.data.network.model.responses.postMovieResponse
+import com.example.tfgwatchlist.yourwatchlist.data.network.model.responses.postSerieResponse
 
 sealed class WatchlistDetailsUiState {
     data object Loading: WatchlistDetailsUiState()
     data object Empty: WatchlistDetailsUiState()
     data class Error(val message: String): WatchlistDetailsUiState()
     data class SuccessMedia(val mediaDetails: MediaItemDetails): WatchlistDetailsUiState()
+    data class SuccessPostSerie(val postResponse: postSerieResponse): WatchlistDetailsUiState()
+    data class SuccessPostPelicula(val postResponse: postMovieResponse): WatchlistDetailsUiState()
     /*
     data class ErrorCast(val message: String): WatchlistDetailsUiState()
     data class SuccessCast(): WatchlistDetailsUiState()
