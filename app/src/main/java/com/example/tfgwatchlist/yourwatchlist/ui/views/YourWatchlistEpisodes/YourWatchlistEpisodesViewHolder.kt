@@ -23,11 +23,15 @@ class YourWatchlistEpisodesViewHolder(private val binding: ItemWatchlistsearchep
     }
 
     fun tratoFechas(fechaString: String?): String{
-        val fecha = LocalDate.parse(fechaString, DateTimeFormatter.ISO_LOCAL_DATE)
-        if(fecha.isAfter(LocalDate.now())){
-            Log.i("Tiempo", "Después")
-            binding.tvItemEpisodePreview.text = "Este episodio todavía no se ha emitido"
+        if(fechaString == null){
+            return ""
+        } else {
+            val fecha = LocalDate.parse(fechaString, DateTimeFormatter.ISO_LOCAL_DATE)
+            if(fecha.isAfter(LocalDate.now())){
+                Log.i("Tiempo", "Después")
+                binding.tvItemEpisodePreview.text = "Este episodio todavía no se ha emitido"
+            }
+            return "${fecha.dayOfMonth} ${fecha.month} ${fecha.year}"
         }
-        return "${fecha.dayOfMonth} ${fecha.month} ${fecha.year}"
     }
 }

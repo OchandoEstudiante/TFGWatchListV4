@@ -14,7 +14,6 @@ interface LoginAndRegisterRepository {
 
     suspend fun registerUser(
         username: String,
-        password: String,
-        email: String
+        password: String
     ): Flow<RegisterResponse>
 }

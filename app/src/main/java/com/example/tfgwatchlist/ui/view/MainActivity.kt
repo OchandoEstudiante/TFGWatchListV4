@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
 
         val navHostFragment = supportFragmentManager.findFragmentById(binding.navHostFragment.id) as NavHostFragment
         val navController = navHostFragment.navController
+
         lifecycleScope.launch {
             authDataStore.isLoggedIn.collect { isLogged ->
                 if(isLogged){

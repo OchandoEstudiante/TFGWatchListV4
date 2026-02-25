@@ -4,9 +4,9 @@
     <item
         android:id="@+id/yourWatchlistFragment"
         android:icon="@drawable/ic_format_list"
-        android:title="Tu watchlist" />
+        android:title="@string/yourWatchlistTextBottomBar" />
     <item
         android:id="@+id/watchlistFragment"
         android:icon="@drawable/ic_search"
-        android:title="Agregar" />
+        android:title="@string/addTextBottomBar" />
 </menu>

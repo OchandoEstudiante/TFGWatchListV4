@@ -33,11 +33,15 @@ class LoginScreenViewModel(
                 .catch {
                     _uiState.value = LoginScreenUiState.Error(it.message.toString())
                 }
-                .collect {
-                    authDataStore.saveLoginState(true)
-                    authDataStore.saveToken(username)
+                .collect { response ->
+                    if(response.ok){
+                        authDataStore.saveLoginState(true)
+                        authDataStore.saveToken(username)
+                        _uiState.value = LoginScreenUiState.loginResponse(response)
+                    } else {
+                        _uiState.value = LoginScreenUiState.Error(response.message.toString())
+                    }
 
-                    _uiState.value = LoginScreenUiState.loginResponse(it)
                 }
         }
     }

@@ -19,9 +19,13 @@ class WatchlistEpisodesViewHolder(private val binding: ItemWatchlistsearchepisod
             .into(binding.ivItemEpisodeImage)
     }
 
-    fun tratoFecha(fechaString: String?): String{
-        val fecha = LocalDate.parse(fechaString, DateTimeFormatter.ISO_LOCAL_DATE)
-        return "${fecha.dayOfMonth} ${fecha.month} ${fecha.year}"
+    fun tratoFecha(fechaString: String?): String?{
+        if(fechaString == null){
+            return ""
+        } else {
+            val fecha = LocalDate.parse(fechaString, DateTimeFormatter.ISO_LOCAL_DATE)
+            return "${fecha.dayOfMonth} ${fecha.month} ${fecha.year}"
+        }
     }
 
     fun tratoDuracion(){

@@ -24,9 +24,9 @@ class RegistrationScreenViewModel(private val repository: LoginAndRegisterReposi
     val uiState = _uiState.asStateFlow()
 
     //Función para registrar usuarios en la base de datos de los cojines
-    fun registerUser(username: String, password: String, mail: String){
+    fun registerUser(username: String, password: String){
         viewModelScope.launch(Dispatchers.IO) {
-            repository.registerUser(username, password, mail)
+            repository.registerUser(username, password)
                 .onStart { _uiState.value = RegistrationScreenUiState.Loading }
                 .catch {
                     _uiState.value = RegistrationScreenUiState.Error(it.message.toString())

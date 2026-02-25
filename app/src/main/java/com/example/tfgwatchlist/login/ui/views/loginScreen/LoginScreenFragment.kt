@@ -95,6 +95,7 @@ class LoginScreenFragment : Fragment() {
                             binding.pbInfoLogin.isVisible = false
                             Log.i("LoginResponse", "${uiState.response}")
                             if(uiState.response.ok){
+                                //Log.i("CHANDODEBUG", uiState.response.toString())
                                 val actionAccess = LoginScreenFragmentDirections.actionLoginFragmentToYourWatchlistFragment(uiState.response.userName.orEmpty())
                                 findNavController().navigate(actionAccess)
                             } else {

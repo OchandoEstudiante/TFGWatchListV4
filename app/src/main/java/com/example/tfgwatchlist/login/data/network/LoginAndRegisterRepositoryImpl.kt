@@ -35,14 +35,12 @@ class LoginAndRegisterRepositoryImpl(
     override suspend fun registerUser(
         username: String,
         password: String,
-        email: String
     ): Flow<RegisterResponse> = flow{
         val response = apiService.register(
             RegisterBody(
                 user = RegisterRequest(
                     name = username,
-                    pass = password,
-                    mail = email
+                    pass = password
                 )
             )
         )

@@ -94,7 +94,7 @@ class Watchlist_Fragment : Fragment() {
                     when(uiState){
                         WatchlistUiState.Empty -> {
                             Log.i("Chando", "Estado vacio")
-                            binding.tvWatchlistSearchInfo.text = "Busca en la barra"
+                            binding.tvWatchlistSearchInfo.text = getString(R.string.insertText)
                         }
                         is WatchlistUiState.Error -> {
                             Log.i("Chando", "Estado de error ${uiState.message}")
@@ -112,7 +112,7 @@ class Watchlist_Fragment : Fragment() {
                             if(modo == "Series"){
                                 if(uiState.items.size == 0){
                                     binding.rvWatchlistSearch.isVisible = false
-                                    binding.tvWatchlistSearchInfo.text = "No se pudieron encontrar series"
+                                    binding.tvWatchlistSearchInfo.text = getString(R.string.noSeriesFound)
                                 } else {
                                     Log.i("Series", "Funciona: ${uiState.items}")
                                     binding.rvWatchlistSearch.isVisible = true
@@ -122,7 +122,7 @@ class Watchlist_Fragment : Fragment() {
                             } else {
                                 if(uiState.items.size == 0){
                                     binding.rvWatchlistSearch.isVisible = false
-                                    binding.tvWatchlistSearchInfo.text = "No se pudieron encontrar peliculas"
+                                    binding.tvWatchlistSearchInfo.text = getString(R.string.noMoviesFound)
                                 } else {
                                     Log.i("Peliculas", "Funciona: ${uiState.items}")
                                     binding.rvWatchlistSearch.isVisible = true

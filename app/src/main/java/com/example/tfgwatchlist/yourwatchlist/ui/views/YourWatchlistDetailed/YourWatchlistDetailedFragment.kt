@@ -249,20 +249,21 @@ class YourWatchlistDetailedFragment : Fragment() {
 
     private fun showDialogModification(mediaItem: ItemMediaMongoItem){
         val dialog = Dialog(requireContext())
-        val binding = DialogTaskChangestatefrommediaBinding.inflate(layoutInflater)
 
-        dialog.setContentView(binding.root)
+        val bindingDialog = DialogTaskChangestatefrommediaBinding.inflate(layoutInflater)
+
+        dialog.setContentView(bindingDialog.root)
         when(mediaItem){
             is MovieMongoItem -> {
-                binding.rbHalfWatched.isVisible = false;
+                bindingDialog.rbHalfWatched.isVisible = false;
             }
             is SerieMongoItem -> {
                 Log.i("Chando", "LMSOOO")
             }
         }
 
-        binding.btnConfirmChanges.setOnClickListener {
-            val selectedID = binding.rgStatesOfMedia.checkedRadioButtonId
+        bindingDialog.btnConfirmChanges.setOnClickListener {
+            val selectedID = bindingDialog.rgStatesOfMedia.checkedRadioButtonId
             val estado = when(selectedID){
                 R.id.rbWatching -> "Viendo"
                 R.id.rbWatched -> "Vista"
@@ -274,6 +275,7 @@ class YourWatchlistDetailedFragment : Fragment() {
             dialog.dismiss()
             if(estado != null){
                 viewModel.changeStateMedia(nombreUsuario, mediaItem, estado)
+                binding.tvYourWatchlistDetailsState.text = "State: ${estado}"
             }
         }
         dialog.show()

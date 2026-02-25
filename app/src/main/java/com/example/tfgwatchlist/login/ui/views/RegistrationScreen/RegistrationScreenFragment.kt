@@ -55,12 +55,12 @@ class RegistrationScreenFragment : Fragment() {
         binding.buttonRegister.setOnClickListener {
             val registerName = binding.etRegisterNameUser.text.toString()
             val registerPassword = binding.etRegisterPassUser.text.toString()
-            val registerMail = binding.etRegisterMailUser.text.toString()
+            //val registerMail = binding.etRegisterMailUser.text.toString()
             Log.i("ChandoRegister", "Click en register")
-            if(registerName.length == 0 || registerPassword.length == 0 || registerMail.length == 0){
+            if(registerName.length == 0 || registerPassword.length == 0){
                 binding.tvInfoRegister.text = "Alguno de los campos están vaciós"
             } else {
-                viewModel.registerUser(registerName, registerPassword, registerMail)
+                viewModel.registerUser(registerName, registerPassword)
             }
         }
     }

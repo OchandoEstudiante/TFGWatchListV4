@@ -12,6 +12,7 @@
     <string name="welcomeText">Welcome</string>
     <string name="yourWatchlistText">Your watchlist</string>
     <string name="addText">Add</string>
+    <string name="insertText">Use the search bar to search a series or a movie</string>
     <string name="noSeriesFound">No series were found in the API with said name</string>
     <string name="noMoviesFound">No movies were found in the API with said name</string>
     <string name="btnAddYourWatchlist">Add to your watchlist:</string>
@@ -57,6 +58,7 @@
     <string name="userNameText">User name:</string>
     <string name="userPasswordText">Password:</string>
     <string name="loginText">Login</string>
+    <string name="registerFragmentText">Register user</string>
     <string name="registerText">Register</string>
     <string name="userMailText">EMail</string>
     <string name="userMailHintText">Introduce Email address</string>
@@ -66,4 +68,7 @@
     <string name="movieAddedTextPart2">" was added to the watchlist of"</string>
     <string name="serieAddedTextPart1">"The series "</string>
     <string name="movieAlreadyInWatchlist">This movie is already in your watchlist</string>
+    <string name="closeSessionText">Close Session</string>
+    <string name="yourWatchlistTextBottomBar">Your Watchlist</string>
+    <string name="addTextBottomBar">Add</string>
 </resources>

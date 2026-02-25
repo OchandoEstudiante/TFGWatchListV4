@@ -22,10 +22,10 @@
     <string name="yourWatchlistText">Tu watchlist</string>
     <string name="addText">Agregar</string>
     <!-- Textos para la parte online-->
+    <string name="insertText">Usa la barra de busqueda para buscar una película o serie</string>
     <string name="noSeriesFound">No se encontraron series en la API con el nombre que has proporcionado</string>
     <string name="noMoviesFound">No se encontraron peliculas en la API con el nombre que has proporcionado</string>
-    <string name="noItemsFound" translatable="false">Hello blank fragment</string>
-    <string name="errorSearch" translatable="false">Hello blank fragment</string>
+    <string name="errorSearch" translatable="false">Ocurrió un error durante la busqueda</string>
     <string name="inCaseOfEmptyApi" translatable="false">Hello blank fragment</string>
     <string name="btnAddYourWatchlist">Agregar a tu watchlist</string>
     <!-- Dialogs -->
@@ -68,9 +68,18 @@
     <string name="userNameText">Nombre de usuario:</string>
     <string name="userPasswordText">Contraseña:</string>
     <string name="loginText">Iniciar sesión</string>
+    <string name="registerFragmentText">Registrar usuario</string>
     <string name="registerText">Registrar</string>
     <string name="userMailText">Correo electronico:</string>
     <string name="userMailHintText">Introduzca el correo electronico:</string>
     <string name="userPasswordHintText">Introduzca la contraseña</string>
     <string name="userNameHintText">Introduzca el nombre del usuario</string>
+    <string name="closeSessionText">Cerrar Sesión</string>
+    <!-- Textos para la bottom bar-->
+    <string name="yourWatchlistTextBottomBar">Tu watchlist</string>
+    <string name="addTextBottomBar">Agregar</string>
+    <!-- -->
+    <!--Register-->
+    <!-- -->
+    <!-- -->
 </resources>
